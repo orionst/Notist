@@ -1,12 +1,12 @@
 package com.orionst.notist.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.orionst.notist.R
 import com.orionst.notist.navigation.BottomNavigationFragment
@@ -29,12 +29,13 @@ class MainActivity : AppCompatActivity(), INoteListNavigation {
             val bottomNavDrawerFragment = BottomNavigationFragment()
             bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
         }
-
+        val fab = findViewById<FloatingActionButton>(R.id.fab);
         bottomAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_item_app_bar_search -> {
-                    //Toast.makeText(layoutRoot.context, "Text menu", Toast.LENGTH_SHORT).show()
-                    Snackbar.make(layoutRoot, "Text menu", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(layoutRoot, "Text menu", Snackbar.LENGTH_SHORT)
+                        .setAnchorView(fab)
+                        .show()
                     true
                 }
                 else -> false
