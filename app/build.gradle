@@ -1,9 +1,11 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'androidx.navigation.safeargs'
 
+androidExtensions {
+    experimental = true
+}
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -37,5 +39,7 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.1.0-alpha04'
 
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0-rc02'
+    // Navigation
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-rc02'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-rc02'
 }

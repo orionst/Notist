@@ -28,6 +28,9 @@
             app:fabAlignmentMode="center"
             app:navigationIcon="@drawable/ic_vector_menu_white"
             app:hideOnScroll="true"
+            app:fabAnimationMode="slide"
+            app:fabCradleMargin="@dimen/padding_short"
+            app:fabCradleRoundedCornerRadius="20dp"
             />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
