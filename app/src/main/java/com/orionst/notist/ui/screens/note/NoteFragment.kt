@@ -5,9 +5,13 @@ import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
@@ -33,7 +37,15 @@ class NoteFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_note, container, false)
+        val layout = inflater.inflate(R.layout.fragment_note, container, false)
+
+        setHasOptionsMenu(true)
+
+        val activity = requireActivity() as AppCompatActivity
+        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        activity.supportActionBar?.setDisplayShowHomeEnabled(true);
+
+        return layout
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,27 +53,47 @@ class NoteFragment : Fragment() {
         initUI()
     }
 
-    private fun initUI() {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            android.R.id.home -> {
+//                activity?.let {
+//                    Snackbar.make(it.layout_root, "Text menu", Snackbar.LENGTH_SHORT)
+//                    .setAnchorView(fab)
+//                    .show() }
+                findNavController().popBackStack()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
+    }
 
+    private fun initUI() {
         note?.let {
             titleNote.setText(it.title)
             bodyNote.setText(it.text)
         }
 
-        activity?.let {
-            it.bottom_app_bar.navigationIcon = null
-            it.bottom_app_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
-            it.bottom_app_bar.replaceMenu(R.menu.note_menu)
+        initBottomBar()
 
+        titleNote.afterTextChanged { saveNote()  }
+        bodyNote.afterTextChanged { saveNote() }
+    }
+
+    private fun initBottomBar() {
+        activity?.let {
+            it.bottom_app_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+            it.bottom_app_bar.setNavigationIcon(R.drawable.ic_vector_back)
             it.fab.setImageDrawable(context?.getDrawable(R.drawable.ic_vector_reply_white))
             it.fab.setOnClickListener {
                 findNavController().popBackStack()
             }
         }
+    }
 
-        titleNote.afterTextChanged { saveNote()  }
-        bodyNote.afterTextChanged { saveNote() }
-
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_bottomappbar_menu, menu)
     }
 
     private fun EditText.afterTextChanged(event: (String) -> Unit) {
