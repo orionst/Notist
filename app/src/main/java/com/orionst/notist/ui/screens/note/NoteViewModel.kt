@@ -1,10 +1,11 @@
 package com.orionst.notist.ui.screens.note
 
-import androidx.lifecycle.ViewModel
 import com.orionst.notist.data.NotesRepository
 import com.orionst.notist.data.entity.Note
+import com.orionst.notist.model.NoteResult
+import com.orionst.notist.ui.base.BaseViewModel
 
-class NoteViewModel(private val repository: NotesRepository = NotesRepository) : ViewModel() {
+class NoteViewModel(private val repository: NotesRepository = NotesRepository) : BaseViewModel<Note?, NoteViewState>() {
 
     private var pendingNote: Note? = null
 
@@ -15,6 +16,19 @@ class NoteViewModel(private val repository: NotesRepository = NotesRepository) :
     override fun onCleared() {
         pendingNote?.let {
             repository.saveNote(it)
+        }
+    }
+
+    fun loadNote(noteId: String) {
+        repository.getNoteById(noteId).observeForever { result ->
+            result ?: let { return@observeForever }
+
+            when (result) {
+                is NoteResult.Success<*> ->
+                    viewStateLiveData.value = NoteViewState(result.data as? Note)
+                is NoteResult.Error ->
+                    viewStateLiveData.value = NoteViewState(error = result.error)
+            }
         }
     }
 

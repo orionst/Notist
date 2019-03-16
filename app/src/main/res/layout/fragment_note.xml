@@ -25,13 +25,16 @@
     <EditText
             android:id="@+id/bodyNote"
             android:gravity="top"
+            android:inputType="textMultiLine"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:layout_marginTop="16dp"
             android:background="@null"
             android:hint="@string/body_note_hint"
-            android:padding="@dimen/padding_medium"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium"
+            android:paddingBottom="70dp"
             />
 
 </LinearLayout>

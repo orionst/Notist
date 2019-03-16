@@ -23,8 +23,8 @@
             android:name="com.orionst.notist.ui.screens.note.NoteFragment"
             tools:layout="@layout/fragment_note">
         <argument
-                android:name="note"
-                app:argType="com.orionst.notist.data.entity.Note"
+                android:name="noteId"
+                app:argType="string"
                 app:nullable="true"
                 android:defaultValue="@null"
                 />

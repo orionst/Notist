@@ -39,7 +39,7 @@ class NotesRecyclerViewAdapter : RecyclerView.Adapter<NotesRecyclerViewAdapter.V
 
             itemView.setOnClickListener {
                 val action = NoteListFragmentDirections.actionOpenNote()
-                action.note = note
+                action.noteId = note.id
                 findNavController().navigate(action)
             }
         }

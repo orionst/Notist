@@ -1,4 +1,4 @@
-package com.orionst.notist.navigation
+package com.orionst.notist.ui.navigation
 
 import android.os.Bundle
 import android.view.LayoutInflater
