@@ -1,18 +1,35 @@
 package com.orionst.notist.ui.screens.note_list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel;
-import com.orionst.notist.data.entity.NotesRepository
-import com.orionst.notist.ui.NotesViewState
+import androidx.lifecycle.Observer
+import com.orionst.notist.data.NotesRepository
+import com.orionst.notist.data.entity.Note
+import com.orionst.notist.model.NoteResult
+import com.orionst.notist.ui.base.BaseViewModel
 
-class NoteListViewModel : ViewModel() {
+class NoteListViewModel(private val repository: NotesRepository = NotesRepository) :
+    BaseViewModel<List<Note>?, NotesViewState>() {
 
-    private val viewStateLiveData : MutableLiveData<NotesViewState> = MutableLiveData()
+    private val notesObserver = Observer<NoteResult> { result ->
+        result ?: let { return@Observer }
 
-    init {
-        viewStateLiveData.value = NotesViewState(NotesRepository.notes)
+        when (result) {
+            is NoteResult.Success<*> -> {
+                viewStateLiveData.value = NotesViewState(result.data as? List<Note>)
+            }
+            is NoteResult.Error -> {
+                viewStateLiveData.value = NotesViewState(error = result.error)
+            }
+        }
     }
 
-    fun viewState(): LiveData<NotesViewState> = viewStateLiveData
+    private val repositoryNotes = repository.getNotes()
+
+    init {
+        viewStateLiveData.value = NotesViewState()
+        repositoryNotes.observeForever(notesObserver)
+    }
+
+    override fun onCleared() {
+        repositoryNotes.removeObserver(notesObserver)
+    }
 }

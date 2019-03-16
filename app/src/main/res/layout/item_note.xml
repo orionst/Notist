@@ -21,6 +21,7 @@
                 android:layout_marginTop="@dimen/padding_medium"
                 android:layout_marginStart="@dimen/padding_medium"
                 android:layout_marginEnd="@dimen/padding_medium"
+                android:maxLines="2"
                 tools:text="Very important note"
                 />
 
@@ -29,6 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_medium"
+                android:maxLines="5"
                 tools:text="My very important note text with very important information"
                 />
 
