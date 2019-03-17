@@ -3,9 +3,11 @@ package com.orionst.notist.data.provider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.github.ajalt.timberkt.Timber
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.orionst.notist.data.entity.Note
+import com.orionst.notist.data.entity.User
+import com.orionst.notist.data.errors.NoAuthException
 import com.orionst.notist.model.NoteResult
 
 class FirestoreProvider : RemoteDataProvider {
@@ -18,58 +20,103 @@ class FirestoreProvider : RemoteDataProvider {
         store.collection(NOTES_COLLECTION)
     }
 
-    override fun subscribeToAllNotes(): LiveData<NoteResult> {
-        val result = MutableLiveData<NoteResult>()
+    private val currentUser get() = FirebaseAuth.getInstance().currentUser
 
-        notesReference.addSnapshotListener { snapshot, e ->
-            e?.let {
-                result.value = NoteResult.Error(e)
-            } ?: let {
-                snapshot?.let {
-                    val notes = mutableListOf<Note>()
-                    for(doc : QueryDocumentSnapshot in snapshot) {
-                        val note = doc.toObject(Note::class.java)
-                        notes.add(note)
-                    }
-                    result.value = NoteResult.Success(notes)
+    private fun getUserNotesCollection() = currentUser?.let {
+        store.collection(USERS_COLLECTION).document(it.uid).collection(NOTES_COLLECTION)
+    } ?: throw NoAuthException()
+
+    override fun getCurrentUser(): LiveData<User?> = MutableLiveData<User?>().apply {
+        value = currentUser?.let {
+            User(it.displayName ?: "", it.email ?: "")
+        }
+    }
+
+    override fun subscribeToAllNotes() = MutableLiveData<NoteResult>().apply {
+        try {
+            getUserNotesCollection().addSnapshotListener { snapshot, e ->
+                this.value = e?.let {
+                    throw it
+                } ?: snapshot?.let { snap ->
+                    val notes = snap.documents.map { it.toObject(Note::class.java) }
+                    NoteResult.Success(notes)
                 }
             }
+        } catch (e: Throwable) {
+            this.value = NoteResult.Error(e)
         }
-        return result
     }
 
-    override fun getNoteById(id: String): LiveData<NoteResult> {
-        val result = MutableLiveData<NoteResult>()
-
-        notesReference.document(id)
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val note = snapshot.toObject(Note::class.java)
-                result.value = NoteResult.Success(note)
-            }.addOnFailureListener {
-                Timber.e(it) {"Error reading note with id $id"}
-                result.value = NoteResult.Error(it)
-            }
-        return result
+    override fun getNoteById(id: String) = MutableLiveData<NoteResult>().apply {
+        try {
+            getUserNotesCollection().document(id).get()
+                .addOnSuccessListener {
+                    val note = it.toObject(Note::class.java)
+                    this.value = NoteResult.Success(note)
+                }
+                .addOnFailureListener {
+                    throw it
+                }
+        } catch (e: Throwable) {
+            this.value = NoteResult.Error(e)
+        }
     }
 
-    override fun saveNote(note: Note): LiveData<NoteResult> {
-        val result = MutableLiveData<NoteResult>()
-
-        notesReference.document(note.id)
-            .set(note)
-            .addOnSuccessListener {
-                Timber.d { "Note $note is saved" }
-                result.value = NoteResult.Success(note)
-            }.addOnFailureListener {
-                Timber.e(it) { "Error saving note $note" }
-                result.value = NoteResult.Error(it)
-            }
-
-        return result
+    override fun saveNote(note: Note) = MutableLiveData<NoteResult>().apply {
+        try {
+            getUserNotesCollection().document(note.id)
+                .set(note)
+                .addOnSuccessListener {
+                    Timber.d { "Note $note is saved" }
+                    this.value = NoteResult.Success(note)
+                }.addOnFailureListener {
+                    Timber.e(it) { "Error saving note $note" }
+                    throw it
+                }
+        } catch (e: Throwable) {
+            this.value = NoteResult.Error(e)
+        }
     }
+
+    // Get notes without auth from storage
+//
+//    override fun subscribeToAllNotes() =  MutableLiveData<NoteResult>().apply {
+//        notesReference.addSnapshotListener { snapshot, e ->
+//            this.value = e?.let {
+//                NoteResult.Error(e)
+//            } ?: snapshot?.let {snap ->
+//                    val notes = snap.documents.map { it.toObject(Note::class.java) }
+//                NoteResult.Success(notes)
+//                }
+//            }
+//    }
+//
+//    override fun getNoteById(id: String) = MutableLiveData<NoteResult>().apply {
+//        notesReference.document(id)
+//            .get()
+//            .addOnSuccessListener { snapshot ->
+//                val note = snapshot.toObject(Note::class.java)
+//                this.value = NoteResult.Success(note)
+//            }.addOnFailureListener {
+//                Timber.e(it) {"Error reading note with id $id"}
+//                this.value = NoteResult.Error(it)
+//            }
+//    }
+//
+//    override fun saveNote(note: Note) = MutableLiveData<NoteResult>().apply {
+//        notesReference.document(note.id)
+//            .set(note)
+//            .addOnSuccessListener {
+//                Timber.d { "Note $note is saved" }
+//                this.value = NoteResult.Success(note)
+//            }.addOnFailureListener {
+//                Timber.e(it) { "Error saving note $note" }
+//                this.value = NoteResult.Error(it)
+//            }
+//    }
 
     companion object {
         private const val NOTES_COLLECTION = "notes"
+        private const val USERS_COLLECTION = "users"
     }
 }

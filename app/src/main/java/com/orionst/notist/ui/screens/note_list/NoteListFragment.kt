@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.snackbar.Snackbar
 import com.orionst.notist.R
 import com.orionst.notist.data.entity.Note
 import com.orionst.notist.ui.IWidgetTuning
@@ -91,17 +90,22 @@ class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTun
                 bottomNavDrawerFragment.show(childFragmentManager, bottomNavDrawerFragment.tag)
                 true
             }
-            R.id.menu_item_app_bar_search -> {
-                activity?.let {
-                    Snackbar.make(it.layout_root, "Text menu", Snackbar.LENGTH_SHORT)
-                    .setAnchorView(it.fab)
-                    .show() }
-                true
+            R.id.menu_item_app_bar_logout -> {
+                showLogoutDialog().let { true }
+//                activity?.let {
+//                    Snackbar.make(it.layout_root, "Text menu", Snackbar.LENGTH_SHORT)
+//                    .setAnchorView(it.fab)
+//                    .show() }
             }
             else -> {
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    private fun showLogoutDialog() {
+        childFragmentManager.findFragmentByTag(LogoutDialog.TAG) ?:
+                LogoutDialog.createInstance().show(childFragmentManager, LogoutDialog.TAG)
     }
 
 }
