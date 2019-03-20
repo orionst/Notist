@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/main_graph"
-        app:startDestination="@+id/note_list_fragment"
+        app:startDestination="@+id/splash_fragment"
         >
 
     <fragment
@@ -15,6 +15,12 @@
         <action
                 android:id="@+id/action_open_note"
                 app:destination="@+id/note_fragment"
+                />
+        <action
+                android:id="@+id/action_sign_out_to_splash"
+                app:destination="@id/splash_fragment"
+                app:popUpTo="@id/note_list_fragment"
+                app:popUpToInclusive="true"
                 />
     </fragment>
 
@@ -27,6 +33,19 @@
                 app:argType="string"
                 app:nullable="true"
                 android:defaultValue="@null"
+                />
+    </fragment>
+
+    <fragment
+            android:id="@+id/splash_fragment"
+            android:name="com.orionst.notist.ui.screens.splash.SplashFragment"
+            android:label="SplashFragment"
+            >
+        <action
+                android:id="@+id/action_sign_in_to_app"
+                app:destination="@id/note_list_fragment"
+                app:popUpTo="@id/splash_fragment"
+                app:popUpToInclusive="true"
                 />
     </fragment>
 

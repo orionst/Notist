@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.orionst.notist.R
 import com.orionst.notist.data.entity.Note
@@ -22,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_note_list.*
 
 
-class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTuning {
+class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTuning, LogoutDialog.LogoutListener {
 
     private lateinit var adapter: NotesRecyclerViewAdapter
     private val bottomNavDrawerFragment: BottomNavigationFragment = BottomNavigationFragment()
@@ -42,9 +44,7 @@ class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTun
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val layout = inflater.inflate(R.layout.fragment_note_list, container, false)
-
-        return layout
+        return inflater.inflate(R.layout.fragment_note_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTun
     }
 
     private fun initUI() {
-        rv_notes.layoutManager = GridLayoutManager(context, 2)
+        rv_notes.layoutManager = StaggeredGridLayoutManager(2, RecyclerView.VERTICAL)
         adapter = NotesRecyclerViewAdapter()
         rv_notes.adapter = adapter
 
@@ -68,6 +68,7 @@ class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTun
 
     override fun bottomAppBarTune() {
         activity?.let {
+            it.bottom_app_bar.visibility = View.VISIBLE
             it.fab.show()
             it.bottom_app_bar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
             it.bottom_app_bar.setNavigationIcon(R.drawable.ic_vector_menu_white)
@@ -103,9 +104,22 @@ class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTun
         }
     }
 
+    override fun onLogout() {
+        activity?.let {
+            AuthUI.getInstance()
+            .signOut(it)
+            .addOnCompleteListener {
+                val action = NoteListFragmentDirections.actionSignOutToSplash()
+                findNavController().navigate(action)
+            }
+        }
+    }
+
     private fun showLogoutDialog() {
-        childFragmentManager.findFragmentByTag(LogoutDialog.TAG) ?:
-                LogoutDialog.createInstance().show(childFragmentManager, LogoutDialog.TAG)
+        childFragmentManager.findFragmentByTag(LogoutDialog.TAG) ?: LogoutDialog.createInstance(this).show(
+            childFragmentManager,
+            LogoutDialog.TAG
+        )
     }
 
 }

@@ -8,16 +8,22 @@ import com.orionst.notist.R
 
 class LogoutDialog : DialogFragment() {
 
+    var listener: LogoutListener? = null
+
     companion object {
         val TAG = LogoutDialog::class.java.name + "TAG"
-        fun createInstance() = LogoutDialog()
+        fun createInstance(listener: LogoutListener? = null): LogoutDialog {
+            val dialog = LogoutDialog()
+            dialog.listener = listener
+            return dialog
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog.Builder(context!!)
+        AlertDialog.Builder(context)
             .setTitle(R.string.logout_dialog_title)
             .setMessage(R.string.logout_dialog_message)
-            .setPositiveButton(R.string.ok_btn_title) { _, _ ->  (activity as LogoutListener).onLogout() }
+            .setPositiveButton(R.string.ok_btn_title) { _, _ ->  listener?.onLogout() }
             .setNegativeButton(R.string.logout_dialog_cancel) { _, _ -> dismiss() }
             .create()
 

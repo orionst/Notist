@@ -1,8 +1,11 @@
 package com.orionst.notist.ui.base
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
@@ -29,6 +32,8 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
         setHasOptionsMenu(true)
     }
 
+    abstract fun renderData(data: T)
+
     protected fun renderError(error: Throwable) {
         when (error) {
             is NoAuthException -> startLoginScreen()
@@ -41,8 +46,6 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
             }
         }
     }
-
-    abstract fun renderData(data: T)
 
     protected fun showError(error: String) {
         Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
@@ -57,10 +60,19 @@ abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setLogo(R.drawable.android_robot)
-                .setTheme(R.style.LoginStyle)
+                .setTheme(R.style.AppTheme_LoginStyle)
                 .setAvailableProviders(providers)
                 .build(),
             RC_SIGN_IN
         )
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == RC_SIGN_IN && resultCode != Activity.RESULT_OK){
+            val activity = requireActivity() as AppCompatActivity
+            activity.finish()
+        }
+    }
+
 }
