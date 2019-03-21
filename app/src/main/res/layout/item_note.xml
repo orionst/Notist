@@ -2,26 +2,32 @@
 <com.google.android.material.card.MaterialCardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_short"
+        app:cardElevation="0dp"
+        app:cardCornerRadius="@dimen/padding_medium"
+        app:strokeColor="@color/colorCardBorder"
+        app:strokeWidth="1dp"
         >
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_margin="@dimen/padding_large"
             >
 
         <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_medium"
-                android:layout_marginStart="@dimen/padding_medium"
-                android:layout_marginEnd="@dimen/padding_medium"
+                android:layout_marginBottom="@dimen/padding_medium"
                 android:maxLines="2"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 tools:text="Very important note"
                 />
 
@@ -29,7 +35,6 @@
                 android:id="@+id/tv_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/padding_medium"
                 android:maxLines="5"
                 tools:text="My very important note text with very important information"
                 />

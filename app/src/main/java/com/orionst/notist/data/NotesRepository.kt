@@ -7,6 +7,8 @@ import com.orionst.notist.data.provider.RemoteDataProvider
 object NotesRepository {
     private val remoteDataProvider: RemoteDataProvider = FirestoreProvider()
 
+    fun  getCurrentUser() = remoteDataProvider.getCurrentUser()
+
     fun getNotes() = remoteDataProvider.subscribeToAllNotes()
 
     fun saveNote(note: Note) = remoteDataProvider.saveNote(note)

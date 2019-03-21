@@ -9,9 +9,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var navController: NavController
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme_BaseTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        navController.popBackStack()
+        if (!navController.popBackStack())
+            finish()
     }
-
 }
