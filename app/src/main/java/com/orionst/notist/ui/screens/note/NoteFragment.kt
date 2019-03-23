@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.orionst.notist.R
+import com.orionst.notist.common.getColorInt
 import com.orionst.notist.data.entity.Note
 import com.orionst.notist.ui.IWidgetTuning
 import com.orionst.notist.ui.base.BaseFragment
@@ -71,13 +72,14 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>(), IWidgetTuning {
 
     override fun renderData(data: Note?) {
         this.note = data
-        initUI()
+        initViewData()
     }
 
-    private fun initUI() {
-        note?.let {
-            titleNote.setText(it.title)
-            bodyNote.setText(it.text)
+    private fun initViewData() {
+        note?.run {
+            titleNote.setText(title)
+            bodyNote.setText(text)
+            bodyNote.setBackgroundColor(color.getColorInt(this@NoteFragment.requireContext()))
         }
 
     }
@@ -123,6 +125,7 @@ class NoteFragment : BaseFragment<Note?, NoteViewState>(), IWidgetTuning {
                 id = it.id,
                 title = titleNote.text.toString(),
                 text = bodyNote.text.toString(),
+                color = it.color,
                 lastChanged = Date()
             )
         } ?: Note(
