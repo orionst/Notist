@@ -5,17 +5,19 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.orionst.notist.R
 import com.orionst.notist.ui.base.BaseFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class SplashFragment: BaseFragment<Boolean?, SplashViewState>() {
 
-    override val viewModel: SplashViewModel by lazy {
-        ViewModelProviders.of(this).get(SplashViewModel::class.java)
-    }
+    override val model: SplashViewModel by viewModel()
+
+//    override val model: SplashViewModel by lazy {
+//        ViewModelProviders.of(this).get(SplashViewModel::class.java)
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_splash, container, false)
@@ -32,7 +34,7 @@ class SplashFragment: BaseFragment<Boolean?, SplashViewState>() {
     override fun onResume() {
         super.onResume()
         Handler().postDelayed({
-            viewModel.requestUser()
+            model.requestUser()
         }, START_DELAY)
 
     }

@@ -16,14 +16,14 @@ import com.orionst.notist.data.errors.NoAuthException
 
 abstract class BaseFragment<T, S : BaseViewState<T>> : Fragment() {
 
-    abstract val viewModel: BaseViewModel<T, S>
+    abstract val model: BaseViewModel<T, S>
 
     companion object {
         private const val RC_SIGN_IN = 42001
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getViewState().observe(this, Observer<S> { viewState ->
+        model.getViewState().observe(this, Observer<S> { viewState ->
             viewState?.apply {
                 data?.let { renderData(it) }
                 error?.let { renderError(it) }
