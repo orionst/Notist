@@ -42,14 +42,22 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha04'
 
     // Navigation
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-rc02'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-rc02'
+    implementation "android.arch.navigation:navigation-fragment-ktx:$naviagation_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$naviagation_version"
 
     //Firebase Firestore Service
-    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-firestore:18.1.0'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
 
     // Timber
     implementation 'com.github.ajalt:timberkt:1.5.1'
+
+    // Anko
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+
+    // Koin
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
 }

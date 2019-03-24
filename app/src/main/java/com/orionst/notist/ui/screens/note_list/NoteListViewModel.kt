@@ -6,7 +6,7 @@ import com.orionst.notist.data.entity.Note
 import com.orionst.notist.model.NoteResult
 import com.orionst.notist.ui.base.BaseViewModel
 
-class NoteListViewModel(private val repository: NotesRepository = NotesRepository) :
+class NoteListViewModel(private val repository: NotesRepository) :
     BaseViewModel<List<Note>?, NotesViewState>() {
 
     private val notesObserver = Observer<NoteResult> { result ->

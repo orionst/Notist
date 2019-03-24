@@ -10,17 +10,9 @@ import com.orionst.notist.data.entity.User
 import com.orionst.notist.data.errors.NoAuthException
 import com.orionst.notist.model.NoteResult
 
-class FirestoreProvider : RemoteDataProvider {
+class FirestoreProvider(private val firebaseAuth: FirebaseAuth, private val store: FirebaseFirestore) : RemoteDataProvider {
 
-    private val store by lazy {
-        FirebaseFirestore.getInstance()
-    }
-
-    private val notesReference by lazy {
-        store.collection(NOTES_COLLECTION)
-    }
-
-    private val currentUser get() = FirebaseAuth.getInstance().currentUser
+    private val currentUser get() = firebaseAuth.currentUser
 
     private fun getUserNotesCollection() = currentUser?.let {
         store.collection(USERS_COLLECTION).document(it.uid).collection(NOTES_COLLECTION)
@@ -76,6 +68,16 @@ class FirestoreProvider : RemoteDataProvider {
         } catch (e: Throwable) {
             this.value = NoteResult.Error(e)
         }
+    }
+
+    override fun deleteNoteById(id: String) = MutableLiveData<NoteResult>().apply {
+        getUserNotesCollection().document(id).delete()
+            .addOnSuccessListener {
+                value = NoteResult.Success(null)
+            }
+            .addOnFailureListener {
+                value = NoteResult.Error(it)
+            }
     }
 
     // Get notes without auth from storage

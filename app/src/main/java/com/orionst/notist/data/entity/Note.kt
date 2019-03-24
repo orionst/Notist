@@ -9,7 +9,7 @@ class Note(
     val id: String = "",
     val title: String = "",
     val text: String ="",
-    val color: Color = Color.PINK,
+    val color: Color = Color.WHITE,
     val lastChanged: Date = Date()
 ) : Parcelable {
 

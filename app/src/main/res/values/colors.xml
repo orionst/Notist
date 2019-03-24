@@ -13,4 +13,7 @@
     <color name="pink">#f8bbd0</color>
 
     <color name="colorCardBorder">#DFDFDF</color>
+
+    <color name="text_secondary">#66000000</color>
+
 </resources>

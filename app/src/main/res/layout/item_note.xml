@@ -15,30 +15,45 @@
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:layout_margin="@dimen/padding_large"
             >
 
-        <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_medium"
-                android:maxLines="2"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                tools:text="Very important note"
+        <View
+                android:id="@+id/color_divider"
+                android:layout_width="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/padding_short"
+                tools:background="@android:color/holo_orange_dark"
                 />
 
-        <TextView
-                android:id="@+id/tv_text"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="5"
-                tools:text="My very important note text with very important information"
-                />
+                android:orientation="vertical"
+                >
 
+            <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_medium"
+                    android:maxLines="2"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    tools:text="Very important note"
+                    />
+
+            <TextView
+                    android:id="@+id/tv_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="5"
+                    tools:text="My very important note text with very important information"
+                    />
+
+        </LinearLayout>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
