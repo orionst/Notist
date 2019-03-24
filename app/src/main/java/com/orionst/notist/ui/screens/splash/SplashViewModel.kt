@@ -4,7 +4,7 @@ import com.orionst.notist.data.NotesRepository
 import com.orionst.notist.data.errors.NoAuthException
 import com.orionst.notist.ui.base.BaseViewModel
 
-class SplashViewModel(private val repository: NotesRepository = NotesRepository): BaseViewModel<Boolean?, SplashViewState>() {
+class SplashViewModel(private val repository: NotesRepository): BaseViewModel<Boolean?, SplashViewState>() {
 
     fun requestUser() {
         repository.getCurrentUser().observeForever {

@@ -9,7 +9,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -22,6 +21,8 @@ import com.orionst.notist.ui.base.BaseFragment
 import com.orionst.notist.ui.navigation.BottomNavigationFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_note_list.*
+import org.jetbrains.anko.support.v4.alert
+import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTuning, LogoutDialog.LogoutListener {
@@ -29,9 +30,10 @@ class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTun
     private lateinit var adapter: NotesRecyclerViewAdapter
     private val bottomNavDrawerFragment: BottomNavigationFragment = BottomNavigationFragment()
 
-    override val viewModel: NoteListViewModel by lazy {
-        ViewModelProviders.of(this).get(NoteListViewModel::class.java)
-    }
+    override val model: NoteListViewModel by viewModel()
+//    override val model: NoteListViewModel by lazy {
+//        ViewModelProviders.of(this).get(NoteListViewModel::class.java)
+//    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -116,10 +118,16 @@ class NoteListFragment : BaseFragment<List<Note>?, NotesViewState>(), IWidgetTun
     }
 
     private fun showLogoutDialog() {
-        childFragmentManager.findFragmentByTag(LogoutDialog.TAG) ?: LogoutDialog.createInstance(this).show(
-            childFragmentManager,
-            LogoutDialog.TAG
-        )
+        alert {
+            titleResource = R.string.logout_dialog_title
+            messageResource = R.string.logout_dialog_message
+            positiveButton(R.string.logout_dialog_submit) { onLogout() }
+            negativeButton(R.string.logout_dialog_cancel){ dialog -> dialog.dismiss() }
+        }.show()
+//        childFragmentManager.findFragmentByTag(LogoutDialog.TAG) ?: LogoutDialog.createInstance(this).show(
+//            childFragmentManager,
+//            LogoutDialog.TAG
+//        )
     }
 
 }

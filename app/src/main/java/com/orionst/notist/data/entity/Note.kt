@@ -9,6 +9,7 @@ class Note(
     val id: String = "",
     val title: String = "",
     val text: String ="",
+    val color: Color = Color.WHITE,
     val lastChanged: Date = Date()
 ) : Parcelable {
 
@@ -23,4 +24,14 @@ class Note(
     }
 
     override fun hashCode() = id.hashCode()
+
+    enum class Color {
+        WHITE,
+        YELLOW,
+        GREEN,
+        BLUE,
+        RED,
+        VIOLET,
+        PINK
+    }
 }
